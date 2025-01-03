@@ -97,6 +97,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter) - email@example.com
+Almotasembellah - [@My facebook](https://www.facebook.com/motasem.awwad.18) - 235179@gmail.com
 
-Project Link: [https://github.com/yourusername/ai-image-generator](https://github.com/yourusername/ai-image-generator)
+Project Link: [https://github.com/yourusername/ai-image-generator](https://github.com/mohasbks/ai-image-generator)
