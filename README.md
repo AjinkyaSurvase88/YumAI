@@ -32,7 +32,7 @@ A modern web application that generates high-quality images from text descriptio
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/ai-image-generator.git
+   git clone https:/mohasbks/github.com//ai-image-generator.git
    cd ai-image-generator
    ```
 
