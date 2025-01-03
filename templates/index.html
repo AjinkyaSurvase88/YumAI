@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator 2050</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0ea5e9;
+            --primary-hover: #0284c7;
+            --secondary-color: #6d28d9;
+            --accent-neon: #00ff94;
+            --accent-purple: #bf00ff;
+            --accent-blue: #00e1ff;
+            --background: #030712;
+            --card-background: rgba(17, 24, 39, 0.7);
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --font-heading: 'Syncopate', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+        }
+
+        * {
+            font-family: var(--font-body);
+            letter-spacing: 0.025em;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+        }
+
+        body {
+            background: var(--background);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(0, 225, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(191, 0, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(0, 255, 148, 0.1) 0%, transparent 60%),
+                linear-gradient(45deg, rgba(3, 7, 18, 0.9) 0%, rgba(3, 7, 18, 0.9) 100%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23112240' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-neon), var(--accent-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient 8s ease infinite;
+            background-size: 300% 300%;
+            text-shadow: 0 0 40px rgba(0, 225, 255, 0.5);
+        }
+
+        .subtitle-gradient {
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .card {
+            background: var(--card-background);
+            border-radius: 24px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                0 0 0 20px rgba(0, 225, 255, 0.02),
+                0 0 0 40px rgba(191, 0, 255, 0.01);
+        }
+
+        textarea {
+            font-family: var(--font-body);
+            font-size: 1.25rem;
+            line-height: 1.75;
+            background: rgba(17, 24, 39, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            resize: none;
+            height: 140px;
+            border-radius: 16px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 
+                0 0 0 3px rgba(0, 225, 255, 0.2),
+                0 0 20px rgba(0, 225, 255, 0.2),
+                0 0 40px rgba(0, 225, 255, 0.1);
+            background: rgba(17, 24, 39, 0.8);
+        }
+
+        textarea::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            padding: 1.25rem 3rem;
+            border-radius: 16px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 8px 20px rgba(0, 225, 255, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 
+                0 15px 30px rgba(0, 225, 255, 0.4),
+                0 0 0 2px rgba(255, 255, 255, 0.2),
+                0 0 30px rgba(0, 225, 255, 0.3);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(0, 225, 255, 0.1);
+            border-top: 4px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 
+                0 0 20px rgba(0, 225, 255, 0.2),
+                0 0 40px rgba(0, 225, 255, 0.1);
+        }
+
+        .suggestion-btn {
+            background: rgba(17, 24, 39, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.25rem 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .suggestion-btn:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 10px 20px rgba(0, 225, 255, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            background: rgba(17, 24, 39, 0.8);
+        }
+
+        .suggestion-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .suggestion-btn:hover::before {
+            left: 100%;
+        }
+
+        .generated-image {
+            border-radius: 24px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 100%;
+            height: auto;
+        }
+
+        .generated-image:hover {
+            transform: scale(1.02);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 2px var(--accent-blue),
+                0 0 30px rgba(0, 225, 255, 0.3);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Neon glow effects */
+        .neon-blue {
+            text-shadow: 0 0 10px rgba(0, 225, 255, 0.8),
+                         0 0 20px rgba(0, 225, 255, 0.5),
+                         0 0 30px rgba(0, 225, 255, 0.3);
+        }
+
+        .neon-purple {
+            text-shadow: 0 0 10px rgba(191, 0, 255, 0.8),
+                         0 0 20px rgba(191, 0, 255, 0.5),
+                         0 0 30px rgba(191, 0, 255, 0.3);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: rgba(17, 24, 39, 0.5);
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(17, 24, 39, 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-blue);
+            border-radius: 4px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 225, 255, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-purple);
+        }
+
+        /* Fade in animation */
+        @keyframes fadeIn {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen py-12 px-4">
+    <div class="container mx-auto max-w-6xl">
+        <div class="text-center mb-20 fade-in float-animation">
+            <h1 class="text-7xl font-black mb-8 title-gradient tracking-wider">
+                AI Image Generator
+            </h1>
+            <p class="text-3xl subtitle-gradient font-medium tracking-wide">Transform your dreams into digital art</p>
+        </div>
+        
+        <div class="grid gap-12">
+            <!-- Main Input Section -->
+            <div class="card p-10 fade-in">
+                <div class="mb-10">
+                    <label for="prompt" class="block text-gray-300 font-bold mb-6 text-2xl neon-blue">Describe your vision</label>
+                    <textarea id="prompt" 
+                        class="w-full px-8 py-6 rounded-xl focus:outline-none"
+                        placeholder="Let your imagination run wild... 🎨"></textarea>
+                </div>
+                
+                <!-- Generate Button -->
+                <div class="flex flex-col items-center">
+                    <button id="generateBtn" 
+                        class="btn-primary text-xl flex items-center">
+                        <i class="fas fa-wand-magic-sparkles mr-4 text-2xl"></i>
+                        Generate Magic
+                    </button>
+                    
+                    <div id="loading" class="hidden flex flex-col items-center mt-12">
+                        <div class="loading-spinner mb-6"></div>
+                        <p class="text-gray-400 text-2xl neon-blue">Creating your masterpiece...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Section -->
+            <div id="resultSection" class="card p-10 hidden fade-in">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-3xl font-bold title-gradient">Your Creation</h3>
+                    <button id="downloadBtn" class="btn-primary px-8 py-4 text-lg flex items-center">
+                        <i class="fas fa-download mr-3"></i>
+                        Download
+                    </button>
+                </div>
+                <div class="flex justify-center">
+                    <img id="generatedImage" class="generated-image hidden" alt="Generated image">
+                </div>
+            </div>
+
+            <!-- History Section -->
+            <div class="card p-10 fade-in">
+                <h3 class="text-3xl font-bold title-gradient mb-8">Your Gallery</h3>
+                <div id="imageHistory" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                    <!-- History items will be added here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Messages -->
+        <div id="error" class="text-red-400 text-center mt-8 hidden fade-in">
+            <p class="error-message font-medium text-xl"></p>
+            <p class="text-sm mt-3 text-gray-500">
+                If you're seeing an authorization error, please make sure your token has the correct permissions.
+            </p>
+        </div>
+        
+        <!-- Prompt Suggestions -->
+        <div class="mt-16 text-center fade-in">
+            <h3 class="font-bold text-3xl mb-10 title-gradient">Need inspiration?</h3>
+            <div id="promptSuggestions" class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <!-- Suggestions will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const imageHistory = [];
+
+        // Collection of creative prompts
+        const prompts = [
+            "A magical forest under a starlit sky with glowing mushrooms ✨",
+            "A cyberpunk city at night with neon lights and rain 🌆",
+            "A mystical crystal cave with ethereal blue light 💎",
+            "A steampunk airship floating through golden clouds 🎈",
+            "An ancient library with floating books and magical dust ✨",
+            "A futuristic space station orbiting a purple nebula 🚀",
+            "An underwater city with bioluminescent buildings 🌊",
+            "A dragon's lair filled with treasure and magical artifacts 🐉",
+            "A Japanese garden in cherry blossom season with lanterns 🏮",
+            "A floating island paradise with waterfalls 🏝️",
+            "A cosmic coffee shop at the edge of the universe ☕",
+            "A witch's potion room with bubbling cauldrons 🧪",
+            "An enchanted winter forest with aurora borealis ❄️",
+            "A desert oasis with magical floating water 🏜️",
+            "A time-traveling train station between dimensions 🚂",
+            "A crystal palace reflecting rainbow light 🌈",
+            "An ancient temple hidden in misty mountains ⛰️",
+            "A garden of giant luminous flowers at night 🌺",
+            "A city where nature and technology blend perfectly 🌿",
+            "A magical bookshop with books that float and glow 📚"
+        ];
+
+        // Function to get random prompts
+        function getRandomPrompts(count) {
+            const shuffled = prompts.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        // Initialize prompt suggestions
+        function initializeSuggestions() {
+            const container = document.getElementById('promptSuggestions');
+            container.innerHTML = ''; // Clear existing suggestions
+            
+            const selectedPrompts = getRandomPrompts(3);
+            
+            selectedPrompts.forEach(prompt => {
+                const button = document.createElement('button');
+                button.className = 'suggestion-btn';
+                button.textContent = prompt;
+                button.addEventListener('click', () => {
+                    document.getElementById('prompt').value = prompt.replace(/[✨🌆💎🎈🚀🌊🐉🏮🏝️☕🧪❄️🏜️🚂🌈⛰️🌺🌿📚]/g, '').trim();
+                });
+                container.appendChild(button);
+            });
+        }
+
+        // Initialize suggestions when page loads
+        initializeSuggestions();
+
+        // Prompt suggestions
+        document.querySelectorAll('.suggestion-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('prompt').value = btn.textContent.replace(/['"]/g, '').replace(/[✨🌆💎🎈🚀🌊🐉🏮🏝️☕🧪❄️🏜️🚂🌈⛰️🌺🌿📚]/g, '').trim();
+            });
+        });
+
+        // Generate image
+        document.getElementById('generateBtn').addEventListener('click', async () => {
+            const prompt = document.getElementById('prompt').value;
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const errorMessage = error.querySelector('.error-message');
+            const generatedImage = document.getElementById('generatedImage');
+            const generateBtn = document.getElementById('generateBtn');
+            const resultSection = document.getElementById('resultSection');
+
+            if (!prompt) {
+                errorMessage.textContent = 'Please enter a description';
+                error.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                loading.classList.remove('hidden');
+                error.classList.add('hidden');
+                generatedImage.classList.add('hidden');
+                generateBtn.disabled = true;
+                generateBtn.classList.add('opacity-50');
+
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prompt }),
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                generatedImage.src = data.image;
+                generatedImage.classList.remove('hidden');
+                resultSection.classList.remove('hidden');
+
+                // Add to history
+                addToHistory(data.image, prompt);
+
+            } catch (err) {
+                errorMessage.textContent = err.message || 'An error occurred while generating the image';
+                error.classList.remove('hidden');
+            } finally {
+                loading.classList.add('hidden');
+                generateBtn.disabled = false;
+                generateBtn.classList.remove('opacity-50');
+            }
+        });
+
+        // Download button
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            const image = document.getElementById('generatedImage');
+            const link = document.createElement('a');
+            link.href = image.src;
+            link.download = 'ai-generated-image.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // Add image to history
+        function addToHistory(imageUrl, prompt) {
+            const historyContainer = document.getElementById('imageHistory');
+            
+            // Create history item
+            const historyItem = document.createElement('div');
+            historyItem.className = 'relative group';
+            
+            // Create image
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = prompt;
+            img.className = 'w-full h-40 object-cover rounded-lg cursor-pointer transition-transform duration-300 transform hover:scale-105';
+            img.onclick = () => {
+                document.getElementById('generatedImage').src = imageUrl;
+                document.getElementById('resultSection').classList.remove('hidden');
+                document.getElementById('prompt').value = prompt;
+            };
+            
+            historyItem.appendChild(img);
+            
+            // Add to container
+            if (historyContainer.firstChild) {
+                historyContainer.insertBefore(historyItem, historyContainer.firstChild);
+            } else {
+                historyContainer.appendChild(historyItem);
+            }
+        }
+    </script>
+</body>
+</html>
