@@ -14,9 +14,6 @@ A modern web application that generates high-quality images from text descriptio
 - ⬇️ Download generated images
 - 💡 Helpful prompt suggestions
 
-## 🚀 Live Demo
-
-[View Live Demo](#) <!-- Add your deployed app URL here -->
 
 ## 🛠️ Technology Stack
 
